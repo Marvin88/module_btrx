@@ -1,0 +1,3 @@
+<?
+$MESS["T88.PICTURES_PARTNER_NAME2"] = "";
+?>

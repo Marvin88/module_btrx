@@ -1,0 +1,3 @@
+<?
+echo "List template page";
+?>

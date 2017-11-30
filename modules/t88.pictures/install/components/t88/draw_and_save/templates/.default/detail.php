@@ -1,0 +1,4 @@
+<?
+echo "Detail element page";
+
+?>
