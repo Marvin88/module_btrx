@@ -4,6 +4,9 @@
 $APPLICATION->IncludeComponent(
     "t88:draw_and_save.list",
     "",
-    Array(),
+    Array(
+        'FOLDER'    =>$arResult['FOLDER'],
+        'NEW'       => $arResult['URL_TEMPLATES']['new'],
+    ),
     $component
 );?>

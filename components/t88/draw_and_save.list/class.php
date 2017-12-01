@@ -15,7 +15,7 @@ class Drop_and_save_list extends Drow_and_save
 {
 
     public function setItems(){
-        $this->arResult['data'] = OrmTable::GetList()->fetchAll();
+        $this->arResult['ITEMS'] = OrmTable::GetList()->fetchAll();
     }
     public function executeComponent()
     {

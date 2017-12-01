@@ -106,9 +106,9 @@ class Drow_and_save extends CBitrixComponent
 
 
 
-                echo "<pre>";
-                print_r($this->arResult);
-                echo "</pre>";
+                //echo "<pre>";
+                //print_r($this->arResult);
+                //echo "</pre>";
 
                 echo $componentPage;
 

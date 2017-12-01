@@ -3,6 +3,10 @@
 $APPLICATION->IncludeComponent(
     "t88:draw_and_save.detail",
     "",
-    Array(),
+    Array(
+        'ITEM_ID'   =>$arResult['VARIABLES']['ELEMENT_ID'],
+        'FOLDER'    =>$arResult['FOLDER'],
+        'NEW'       => $arResult['URL_TEMPLATES']['new'],
+    ),
     $component
 );?>

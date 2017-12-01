@@ -15,16 +15,9 @@ class Drop_and_save_detail extends Drow_and_save
 {
 
     public function setItem(){
-        $context = Application::getInstance()->getContext();
-        $request = $context->getRequest();
-        //print_r($request);
-
-
-        print_r($this->setVariables());
-
-        print_r($this->arParams);
-        die();
-        $this->arResult['data'] = OrmTable::GetList()->fetchAll();
+        $result = OrmTable::getById($this->arParams['ITEM_ID']);
+        $row = $result->fetch();
+        $this->arResult['ITEM'] = $row;
     }
     public function executeComponent()
     {
