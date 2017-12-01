@@ -131,7 +131,7 @@ Class t88_pictures extends CModule{
             \Bitrix\Main\ModuleManager::registerModule($this->MODULE_ID);
         }
         else{
-            $APPLICATION->ThowException(Loc::getMessage("T88.PICTURES_INSTALL_VERSION_ERROR"));
+            $APPLICATION->ThrowException(Loc::getMessage("T88.PICTURES_INSTALL_VERSION_ERROR"));
         }
 
     }

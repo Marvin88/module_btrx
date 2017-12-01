@@ -11,7 +11,7 @@ use \Bitrix\Main\Application;
 
 CBitrixComponent::includeComponentClass("t88:draw_and_save");
 
-class Drop_and_save_detail extends Drow_and_save
+class Drop_and_save_new extends Drow_and_save
 {
     protected $salt = 'asdas1231230)@@)@@)';
 
@@ -44,7 +44,7 @@ class Drop_and_save_detail extends Drow_and_save
                 $pass = "12312312123";
                 $result = OrmTable::add(array(
                     'FILEID' => $fid,
-                    'PASSWORD' => md5($pass.$this->salt)
+                    'PASSWORD' => md5($pass."".$this->salt)
                 ));
 
                 if ($result->isSuccess())

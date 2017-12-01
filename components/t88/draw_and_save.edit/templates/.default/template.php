@@ -1,11 +1,10 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
-
+print_r($arResult);
 
 use \Bitrix\Main\Localization\Loc as Loc;
 Loc::loadMessages(dirname(__FILE__).'\lang\ru\template.php');
 
-print_r($arResult);
 
 ?>
 
@@ -41,7 +40,7 @@ print_r($arResult);
 
 <h2>
 
-    Страница добавления рисунка
+    Страница редактирования рисунка
 
 </h2>
 <?if($arResult['SAVE']=="Y"){
@@ -101,6 +100,27 @@ print_r($arResult);
     $(document).ready(function()
     {
         $("#test").jqScribble();
+
+        var can = document.getElementById('test');
+        var ctx = can.getContext('2d');
+
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        }
+
+        img.src = "<?=CFile::GetPath($arResult['ITEM']['FILEID'])?>";
+
+
+
+        drawing = new Image();
+        drawing.src = "draw.png"; // can also be a remote URL e.g. http://
+        drawing.onload = function() {
+            context.drawImage(drawing,0,0);
+        };
+
+
+
 
     });
 </script>

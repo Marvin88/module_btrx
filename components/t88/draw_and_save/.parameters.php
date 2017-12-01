@@ -22,6 +22,11 @@ $arComponentParameters = array(
                 "DEFAULT" => "#ELEMENT_ID#/",
                 "VARIABLES" => array("ELEMENT_ID"),
             ),
+            "edit" => array(
+                "NAME" => Loc::getMessage("EDIT_ELEMENT_PAGE"),
+                "DEFAULT" => "edit/#ELEMENT_ID#/",
+                "VARIABLES" => array("ELEMENT_ID"),
+            ),
 
         ),
     ),

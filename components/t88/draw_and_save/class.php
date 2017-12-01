@@ -1,4 +1,3 @@
-
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 // $arParams
@@ -50,6 +49,7 @@ class Drow_and_save extends CBitrixComponent
         "list" => "list",
         "detail" => "#ELEMENT_ID#/",
         "new" => "new",
+        "edit" => "edit/#ELEMENT_ID#/",
     );
 
     public function executeComponent()
@@ -63,6 +63,7 @@ class Drow_and_save extends CBitrixComponent
                 "list" => "list/",
                 "detail" => "#ELEMENT_ID#/",
                 "new" => "/new/",
+                "edit" => "/edit/#ELEMENT_ID#/",
             );
 
             $arDefaultVariableAliases404 = array();
