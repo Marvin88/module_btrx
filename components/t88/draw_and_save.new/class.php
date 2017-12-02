@@ -15,7 +15,7 @@ class Drop_and_save_new extends Drow_and_save
 {
     protected $salt = 'asdas1231230)@@)@@)';
 
-    public function addNewItem($data){
+    public function addNewItem($data, $pass){
 
         //$data = $_POST['imagedata'];
         $filename = $_SERVER['DOCUMENT_ROOT'].'/Screenshot_1.png';
@@ -41,7 +41,7 @@ class Drop_and_save_new extends Drow_and_save
             $fid = CFile::SaveFile($arr_file, "/t88/");
             if($fid){
 
-                $pass = "12312312123";
+
                 $result = OrmTable::add(array(
                     'FILEID' => $fid,
                     'PASSWORD' => md5($pass."".$this->salt)
@@ -64,10 +64,14 @@ class Drop_and_save_new extends Drow_and_save
         if ($this->checkModules()) {
             if ($this->startResultCache()) {
                //$this->setItem();
-                if($_POST['imagedata'] != ""){
-                    if($id = $this->addNewItem($_POST['imagedata'])){
+                if($_POST['imagedata'] != "" && $_POST['pass']!=""){
+                    if($id = $this->addNewItem($_POST['imagedata'], $_POST['pass'])){
                         $this->arResult['SAVE']='Y';
                         $this->arResult['NEW_ITEM'] = $id;
+
+                        $GLOBALS['APPLICATION']->RestartBuffer();
+                        echo json_encode($this->arResult);
+                        die();
                     }
                 }
 

@@ -9,7 +9,8 @@ print_r($arResult);
 
 ?>
 
-<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" ></script>
+<script src="http://code.jquery.com/jquery-1.7.min.js" type="text/javascript" ></script>
+
 <script src="<?=$this->GetFolder()?>/draw_plugin/jquery.jqscribble.js" type="text/javascript"></script>
 <script src="<?=$this->GetFolder()?>/draw_plugin/jqscribble.extrabrushes.js" type="text/javascript"></script>
 
@@ -44,55 +45,62 @@ print_r($arResult);
     Страница добавления рисунка
 
 </h2>
-<?if($arResult['SAVE']=="Y"){
-    echo Loc::getMessage("SAVEOK");
-    ?>
-    <a href="<?=$arParams['FOLDER']?><?=$arResult['NEW_ITEM']?>/">Посмотреть новый элемент </a>
-    <?
-}?>
-
-
 
 <div style="overflow: hidden; margin-bottom: 5px;">
-    <div class="column-left links">
-        <strong>BRUSHES:</strong>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brush: BasicBrush});'>Basic</a>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brush: LineBrush});'>Line</a>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brush: CrossBrush});'>Cross</a>
-    </div>
-    <div class="column-right links">
-        <strong>COLORS:</strong>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brushColor: "rgb(0,0,0)"});'>Black</a>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brushColor: "rgb(255,0,0)"});'>Red</a>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brushColor: "rgb(0,255,0)"});'>Green</a>
-        <a href="#" onclick='$("#test").data("jqScribble").update({brushColor: "rgb(0,0,255)"});'>Blue</a>
-    </div>
+
 </div>
-<canvas id="test" style="border: 1px dashed grey; cursor: crosshair "></canvas>
+<div style="width: 800px; height: 600px">
+    <canvas id="test" style="border: 1px dashed grey; cursor: crosshair; " ></canvas>
+</div>
 <div class="links" style="margin-top: 5px;">
-    <strong>OPTIONS:</strong>
-    <a href="#" onclick='addImage();'>Add Image</a>
-    <a href="#" onclick='$("#test").data("jqScribble").clear();'>Clear</a>
-    <a href="#" onclick='$("#test").data("jqScribble").save();'>Save</a>
-    <a href="#" onclick='save();'>Custom Save</a>
+
+    <a href="javascript:void(0);" onclick='$("#test").data("jqScribble").clear();'>Очистить</a>
+    <a href="#" onclick='beforeSave(event);'>Сохранить</a>
+
 </div>
+
 <script type="text/javascript">
-    function save()
+    function beforeSave(event){
+        event.preventDefault();
+        //$(document).find('.js-password').find('a.js-detail_link').attr('href', attr+""+msg.NEW_ITEM+"/");
+        $(document).find('.js-password').addClass('active');
+
+    }
+
+    function save(event)
     {
+        event.preventDefault();
         $("#test").data("jqScribble").save(function(imageData)
         {
-            alert("!!!!");
-            //if(confirm("This will write a file using the example image_save.php. Is that cool with you?"))
-            //{
-                //$.post('<?=$this->GetFolder()?>/draw_plugin/image_save.php', {imagedata: imageData}, function(response)
 
-                $.post('', {imagedata: imageData}, function(response)
-                {
-                    $('body').append(response);
-                });
+            $.ajax({
+                type: "POST",
+                url: "",
+                dataType: "json",
+                data: {
+                    imagedata: imageData,
+                    pass: $('.js-password_field').val(),
+                },
+                success: function(msg) {
+                    if(msg.SAVE=="Y"){
+                       // alert('Сохранено');
+                        attr = $(document).find('.js-response').find('a').attr('href');
+                        $(document).find('.js-response').find('a.js-detail_link').attr('href', attr+""+msg.NEW_ITEM+"/");
+                        $(document).find('.js-response').addClass('active');
+
+                    }
+                    else{
+                        alert("Ошибка");
+                    }
+
+                }
+            });
+
+
             //}
         });
     }
+
     function addImage()
     {
         var img = prompt("Enter the URL of the image.");
@@ -102,10 +110,49 @@ print_r($arResult);
     {
         $("#test").jqScribble();
 
+        $('.js-close_popup').click( function(){
+            $(this).parent().removeClass('active');
+
+            if($(this).parent().hasClass('js-response')){
+                location.reload();
+            }
+
+        });
+
+
+    $('.js-password_field').on('input',function(e){
+        length =($(this).val().length);
+        console.log(length);
+        if(length>2){
+            $('.js-apply_pass').attr('disabled',false);
+        }
+        else{
+            $('.js-apply_pass').attr('disabled',true);
+        }
+    })
+
+
+        $('.js-apply_pass').on('click', function(e) {
+            $(this).parent().parent().find('.js-close_popup').click();
+
+            setTimeout(function () {
+                save(e);
+            },200);
+
+
+        })
+        /*$('.js-apply_pass').click( function(){
+            pass = $(this).val();
+            if(pass.length<=2){
+                $(this).addClass('error_field');
+            }
+        });*/
+
+
     });
 </script>
 
-
+<!--
 <form action="" method="post" name="NEW_ELEMENT">
     <?=bitrix_sessid_post()?>
     <div class="form_field_group">
@@ -120,6 +167,111 @@ print_r($arResult);
     <input type="hidden" name="SUBMIT" value="Y"/>
     <input type="submit" value="Сохранить"/>
 </form>
+-->
+
+<div class="js-response popup_window">
+    <img class="js-close_popup" src="<?=$this->GetFolder()?>/img/close.png"/>
+    <div class="top_block">
+        <span class="header_message">Успех!</span>
+        <?=Loc::getMessage("SAVEOK"); ?>
+    </div>
+    <div class="bottom_block">
+        <a class="js-detail_link" href="<?=$arParams['FOLDER']?>">Посмотреть новый элемент </a>
+        <br><br>
+        <a href="<?=$arParams['FOLDER']?>">Список рисунков</a>
+    </div>
+</div>
+
+<div class="js-password popup_window">
+    <img class="js-close_popup" src="<?=$this->GetFolder()?>/img/close.png"/>
+    <div class="top_block">
+        <span class="header_message">Отлично!</span>
+        <?=Loc::getMessage("SETPASSWORD");?>
+        <input class="js-password_field" type="password" name="PASSWORD"/>
+    </div>
+    <div class="bottom_block">
+        <a class="js-apply_pass" disabled="disabled" href="javascript:void(0);">Сохранить</a>
+    </div>
+</div>
 
 
+<style>
+    .popup_window.active{
+        opacity: 1;
+        position: absolute;
+        display: block;
+        top:50%;
+        transition: all 0.8s;
+    }
+    .popup_window{
+        opacity: 0;
+        position: absolute;
+        top:-1150%;
+        left: 50%;
+        margin-left: -150px;
+        width: 300px;
+        -webkit-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
+        -moz-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
+        box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
+
+        transition: all 0.8s;
+    }
+    .popup_window .top_block{
+        background-color: #f6f6f6;
+        padding-top: 40px;
+        padding-bottom: 23px;
+        text-align: center;
+    }
+    .popup_window .top_block input{
+        margin-top: 14px;
+    }
+    .popup_window .top_block b{
+        display: inline-block;
+        width: 100%;
+    }
+    .popup_window .bottom_block{
+        padding-top: 30px;
+        padding-bottom: 30px;
+        background-color: #7dbaab;
+        text-align: center;
+    }
+    .popup_window .bottom_block a{
+        text-decoration: none;
+        background: #405661;
+        line-height: 40px;
+        display: inline;
+        display: inline-block;
+        padding-right: 20px;
+        padding-left: 20px;
+        color: #f6f6f6;
+        transition: all 0.4s;
+    }
+    .popup_window .bottom_block a:hover{
+        -webkit-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
+        -moz-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
+        box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
+        transition: all 0.4s;
+    }
+    .header_message {
+        font-size: 28px;
+        text-align: center;
+        font-family: sans-serif;
+        display: inline-block;
+        width: 100%;
+        display: inline-block;
+        padding-bottom: 10px;
+    }
+    .js-close_popup{
+        width: 24px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        opacity: 0.2;
+        cursor: pointer;
+    }
+    .js-apply_pass[disabled="disabled"]{
+        opacity: 0.3;
+    }
+
+</style>
 
