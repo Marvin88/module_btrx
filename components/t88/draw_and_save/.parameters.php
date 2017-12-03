@@ -12,6 +12,14 @@ $arComponentParameters = array(
             "DEFAULT" => "10",
             "PARENT" => "",
         ),
+        "SLIDER_MODE" => array(
+            "PARENT" => "",  // если нет - ставится ADDITIONAL_SETTINGS
+            "NAME" => Loc::GetMessage('T88.DISPLAY_MODE'),
+            "TYPE" => "CHECKBOX",
+            "REFRESH" => "N",
+            "MULTIPLE" => "N",
+            "DEFAULT" => "",
+        ),
 
         "SEF_MODE" => Array(
             "list" => array(

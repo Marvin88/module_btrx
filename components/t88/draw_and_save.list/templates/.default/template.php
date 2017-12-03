@@ -1,36 +1,33 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+
+use \Bitrix\Main\Localization\Loc;
+Loc::loadMessages(__FILE__);
 ?>
-<script
-        src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
+
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
 
-<script>
-    $(document).ready(function(){
-        $('.pictures_slider').bxSlider({
-            slideWidth: 200,
-            minSlides: 2,
-            maxSlides: 3,
-            moveSlides: 1,
-        });
-    });
-</script
+
+
+<?$this->addExternalJS("https://code.jquery.com/jquery-3.2.1.min.js");?>
+
+<?$this->addExternalJS($this->getFolder()."/handler.js");?>
+<?$this->addExternalCss($this->getFolder()."/styles.css");?>
+
+
 
 <?
-
-echo $arParams['COUNT_PER_PAGE']."<br>";
-
+$APPLICATION->SetTitle("Список элементов");
 
 if(count($arResult['ITEMS'])> 0){
     ?>
-    <h2>Список элементов</h2>
-    <a style=" -webkit-appearance: button; padding: 5px 5px;" href="<?=$arParams['FOLDER']?><?=$arParams['NEW']?>">Добавить новый</a>
 
-    <hr>
+    <a class="action_btn" href="<?=$arParams['FOLDER']?><?=$arParams['NEW']?>"><?=Loc::getMessage('T88.ADD_NEW')?></a>
+
  <?if($arParams['SLIDER_MODE']=="Y"){  // Режим слайдера?>
+
     <div class="pictures_slider" >
         <?
         foreach ($arResult['ITEMS'] as $ITEM){?>
@@ -68,23 +65,12 @@ if(count($arResult['ITEMS'])> 0){
        ?>
    <?}
 }else{?>
-    Все ждут Вашего шедевра!
-    <a style=" -webkit-appearance: button; padding: 5px 5px;" href="<?=$arParams['FOLDER']?><?=$arParams['NEW']?>">Нарисовать</a>
+    <?=Loc::getMessage('T88.ADD_FIRST')?>
+    <a class="action_btn" href="<?=$arParams['FOLDER']?><?=$arParams['NEW']?>"><?=Loc::getMessage('T88.DRAW_NEW')?></a>
     <?
 }
-
 ?>
-<style>
-    .pictures_list a{
-        display: inline-block;
-        width: 50%;
-        float: left;
-        text-align: center;
-    }
-    .pictures_list a img{
-        display: inline-block;
-    }
-</style>
+
 
 
 

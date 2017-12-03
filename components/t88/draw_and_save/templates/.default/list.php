@@ -8,6 +8,7 @@ $APPLICATION->IncludeComponent(
         'FOLDER'            => $arResult['FOLDER'],
         'NEW'               => $arResult['URL_TEMPLATES']['new'],
         'COUNT_PER_PAGE'    => $arResult['COUNT_PER_PAGE'],
+        'SLIDER_MODE'       => $arResult['SLIDER_MODE'],
 
     ),
     $component

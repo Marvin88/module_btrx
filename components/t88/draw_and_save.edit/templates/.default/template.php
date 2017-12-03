@@ -1,46 +1,20 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 
-//print_r($arResult);
-use \Bitrix\Main\Localization\Loc as Loc;
-Loc::loadMessages(dirname(__FILE__).'\lang\ru\template.php');
+use \Bitrix\Main\Localization\Loc;
+Loc::loadMessages(__FILE__);
 ?>
 
-<script src="http://code.jquery.com/jquery-1.5.2.min.js" type="text/javascript" ></script>
-<script src="<?=$this->GetFolder()?>/draw_plugin/jquery.jqscribble.js" type="text/javascript"></script>
-<script src="<?=$this->GetFolder()?>/draw_plugin/jqscribble.extrabrushes.js" type="text/javascript"></script>
-
-<style>
-    .links a {
-        padding-left: 10px;
-        margin-left: 10px;
-        border-left: 1px solid #000;
-        text-decoration: none;
-        color: #999;
-    }
-    .links a:first-child {
-        padding-left: 0;
-        margin-left: 0;
-        border-left: none;
-    }
-    .links a:hover {text-decoration: underline;}
-    .column-left {
-        display: inline;
-        float: left;
-    }
-    .column-right {
-        display: inline;
-        float: right;
-    }
-</style>
+<?$this->addExternalJS("http://code.jquery.com/jquery-1.5.2.min.js");?>
+<?$this->addExternalJS($this->GetFolder()."/draw_plugin/jquery.jqscribble.js");?>
+<?$this->addExternalJS($this->GetFolder()."/draw_plugin/jqscribble.extrabrushes.js");?>
+<?$this->addExternalJS($this->getFolder()."/handler.js");?>
+<?$this->addExternalCss($this->getFolder()."/styles.css");?>
 
 
-
-<h2>
-
-    Страница редактирования рисунка
-
-</h2>
-<a style=" -webkit-appearance: button; padding: 5px 5px;" href="<?=$arParams['FOLDER']?>">К списку</a>
+<?
+$APPLICATION->SetTitle("Страница редактирования рисунка");
+?>
+<a class="action_btn" href="<?=$arParams['FOLDER']?>"><?=Loc::getMessage('T88.BACK_TO_LIST')?></a>
 <?if($arResult['PASS_ERROR']!=""):?>
     <p style="color: red"><?=$arResult['PASS_ERROR'];?></p>
 <?endif;?>
@@ -61,8 +35,8 @@ else{?>
     </div>
     <div class="links" style="margin-top: 5px;">
 
-        <a href="javascript:void(0);" onclick='$("#test").data("jqScribble").clear();'>Очистить</a>
-        <a href="#" onclick='save(event);'>Сохранить</a>
+        <a class="action_btn" href="javascript:void(0);" onclick='$("#test").data("jqScribble").clear();'><?=Loc::getMessage('T88.CLEAR')?></a>
+        <a class="action_btn" href="#" onclick='save(event);'><?=Loc::getMessage('T88.SAVE')?></a>
 
     </div>
 <?}?>
@@ -210,86 +184,4 @@ else{?>
         <a class="js-apply_pass" disabled="disabled" href="javascript:void(0);">Сохранить</a>
     </div>
 </div>
-
-
-<style>
-    .popup_window.active{
-        opacity: 1;
-        position: absolute;
-        display: block;
-        top:50%;
-        transition: all 0.8s;
-    }
-    .popup_window{
-        opacity: 0;
-        position: absolute;
-        top:-1150%;
-        left: 50%;
-        margin-left: -150px;
-        width: 300px;
-        -webkit-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
-        -moz-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
-        box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
-
-        transition: all 0.8s;
-    }
-    .popup_window .top_block{
-        background-color: #f6f6f6;
-        padding-top: 40px;
-        padding-bottom: 23px;
-        text-align: center;
-    }
-    .popup_window .top_block input{
-        margin-top: 14px;
-    }
-    .popup_window .top_block b{
-        display: inline-block;
-        width: 100%;
-    }
-    .popup_window .bottom_block{
-        padding-top: 30px;
-        padding-bottom: 30px;
-        background-color: #7dbaab;
-        text-align: center;
-    }
-    .popup_window .bottom_block a{
-        text-decoration: none;
-        background: #405661;
-        line-height: 40px;
-        display: inline;
-        display: inline-block;
-        padding-right: 20px;
-        padding-left: 20px;
-        color: #f6f6f6;
-        transition: all 0.4s;
-    }
-    .popup_window .bottom_block a:hover{
-        -webkit-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
-        -moz-box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
-        box-shadow: -2px 6px 81px -10px rgba(0,0,0,0.75);
-        transition: all 0.4s;
-    }
-    .header_message {
-        font-size: 28px;
-        text-align: center;
-        font-family: sans-serif;
-        display: inline-block;
-        width: 100%;
-        display: inline-block;
-        padding-bottom: 10px;
-    }
-    .js-close_popup{
-        width: 24px;
-        position: absolute;
-        right: 4px;
-        top: 4px;
-        opacity: 0.2;
-        cursor: pointer;
-    }
-    .js-apply_pass[disabled="disabled"]{
-        opacity: 0.3;
-    }
-
-</style>
-
 

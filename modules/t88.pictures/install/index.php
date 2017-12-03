@@ -124,6 +124,8 @@ Class t88_pictures extends CModule{
     function DoInstall(){
         global $APPLICATION;
 
+
+
         if($this->isVersionD7()){
             $this->InstallDB();
             $this->InstallEvents();
@@ -141,15 +143,26 @@ Class t88_pictures extends CModule{
         $context = Application::getInstance()->getContext();
         $request = $context->getRequest();
 
-        \Bitrix\Main\ModuleManager::unRegisterModule($this->MODULE_ID);
 
-        $this->UnInstallDB();
-        $this->UnInstallEvents();
-        $this->UnInstallFiles();
+        $context = Appplication::getInstance()->getContext();
+        $request = $context->getRequest();
 
-        if($request['savedata']!='Y'){
-            $this->UnInstallDB();
+        if($request['step']<2){
+            $APPLICATION->IncludeAdminFile(Loc::getMessage("T88.UNINSTALL_TITLE"),$this->GetPath()."/install/unstep2.php");
         }
+        elseif($request['step']==2){
+            $this->UnInstallFiles();
+            $this->UnInstallEvents();
+
+            if($request['savedata'] != 'N')
+                $this->UnInstallDB();
+
+            \Bitrix\Main\ModuleManager::unRegisterModule($this->MODULE_ID);
+
+            $APPLICATION->IncludeAdminFile(Loc::getMessage("T88.UNINSTALL_TITLE"), $this->GetPath()."/install/unstep2.php");
+        }
+
+
     }
 
 

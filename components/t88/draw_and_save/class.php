@@ -103,7 +103,8 @@ class Drow_and_save extends CBitrixComponent
                     "URL_TEMPLATES" => $arUrlTemplates,
                     "VARIABLES" => $arVariables,
                     "ALIASES" => $arVariableAliases,
-                    "COUNT_PER_PAGE"=> $this->arParams['COUNT_PER_PAGE']
+                    "COUNT_PER_PAGE"=> $this->arParams['COUNT_PER_PAGE'],
+                    "SLIDER_MODE" => $this->arParams['SLIDER_MODE'],
                 );
 
 
