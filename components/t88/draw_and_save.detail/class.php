@@ -15,14 +15,12 @@ CBitrixComponent::includeComponentClass("t88:draw_and_save");
 
 class Drop_and_save_detail extends Drow_and_save
 {
-
-    public function setItem(){
-
+    public function getItem(){
         if($this->arParams['ITEM_ID']!=""){
 
             $result = OrmTable::getById($this->arParams['ITEM_ID']);
             $row = $result->fetch();
-            $this->arResult['ITEM'] = $row;
+            return $row;
         }
         else{
 
@@ -31,14 +29,24 @@ class Drop_and_save_detail extends Drow_and_save
 
         }
     }
+
+    public function setItem($item){
+        $this->arResult['ITEM'] = $item;
+    }
+
     public function executeComponent()
     {
-        if ($this->checkModules()) {
-            if ($this->startResultCache()) {
-               $this->setItem();
-               $this->includeComponentTemplate($this->componentPage);
+        $this->checkModules();
+        if ($this->startResultCache()) {
+
+
+            if($item = $this->getItem()){
+                $this->setItem($item);
             }
-            return $this->arResult;
+
+            $this->includeComponentTemplate($this->componentPage);
         }
+        return $this->arResult;
     }
+
 }

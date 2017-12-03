@@ -20,7 +20,7 @@ class Drow_and_save extends CBitrixComponent
 
         if(!Loader::includeModule("t88.pictures")){
             ShowError(Loc::getMessage('T88_MODULE_NOT_INSTALL'));
-            return false;
+            die();
         }
         return true;
     }
@@ -28,6 +28,7 @@ class Drow_and_save extends CBitrixComponent
     public function getLang(){
         $this->includeComponentLang(basename(__FILE__));
         Loc::loadMessages(__FILE__);
+
     }
 
 
@@ -102,6 +103,7 @@ class Drow_and_save extends CBitrixComponent
                     "URL_TEMPLATES" => $arUrlTemplates,
                     "VARIABLES" => $arVariables,
                     "ALIASES" => $arVariableAliases,
+                    "COUNT_PER_PAGE"=> $this->arParams['COUNT_PER_PAGE']
                 );
 
 
@@ -111,7 +113,7 @@ class Drow_and_save extends CBitrixComponent
                 //print_r($this->arResult);
                 //echo "</pre>";
 
-                echo $componentPage;
+                //echo $componentPage;
 
                 if($this->startResultCache())
                 {

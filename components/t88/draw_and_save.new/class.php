@@ -13,9 +13,15 @@ CBitrixComponent::includeComponentClass("t88:draw_and_save");
 
 class Drop_and_save_new extends Drow_and_save
 {
-    protected $salt = 'asdas1231230)@@)@@)';
+    protected static $salt = 'asdas1231230)@@)@@)';
 
-    public function addNewItem($data, $pass){
+    public function getSalt(){
+        return self::$salt;
+        //return $this->salt;
+    }
+
+
+    public function addNewItem($data, $pass ){
 
         //$data = $_POST['imagedata'];
         $filename = $_SERVER['DOCUMENT_ROOT'].'/Screenshot_1.png';
@@ -44,7 +50,7 @@ class Drop_and_save_new extends Drow_and_save
 
                 $result = OrmTable::add(array(
                     'FILEID' => $fid,
-                    'PASSWORD' => md5($pass."".$this->salt)
+                    'PASSWORD' => md5($pass."".self::$salt)
                 ));
 
                 if ($result->isSuccess())

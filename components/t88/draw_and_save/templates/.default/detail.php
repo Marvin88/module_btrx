@@ -6,6 +6,7 @@ $APPLICATION->IncludeComponent(
     Array(
         'ITEM_ID'   =>$arResult['VARIABLES']['ELEMENT_ID'],
         'FOLDER'    =>$arResult['FOLDER'],
+        'EDIT'       => $arResult['URL_TEMPLATES']['edit'],
         'NEW'       => $arResult['URL_TEMPLATES']['new'],
     ),
     $component

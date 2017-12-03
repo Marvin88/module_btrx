@@ -5,6 +5,13 @@ Loc::loadMessages(__FILE__);
 $arComponentParameters = array(
     "GROUPS" => array(),
     "PARAMETERS" => array(
+        "COUNT_PER_PAGE" => Array(
+            "NAME" => GetMessage("COUNT_PER_PAGE"),
+            "TYPE" => "STRING",
+            "MULTIPLE" => "N",
+            "DEFAULT" => "10",
+            "PARENT" => "",
+        ),
 
         "SEF_MODE" => Array(
             "list" => array(

@@ -82,8 +82,8 @@ class Drow_and_save extends CBitrixComponent
     {
         if($this->checkModules()){
             //print_r($this->getUrlTemplates());
-            print_r($this->getComponentPage());
-            echo "<br>";
+            //print_r($this->getComponentPage());
+            //echo "<br>";
 
             /*OrmTable::add(array(
                 'FILEID' => '123123',
