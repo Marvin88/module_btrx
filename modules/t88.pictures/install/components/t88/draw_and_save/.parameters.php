@@ -5,25 +5,21 @@ Loc::loadMessages(__FILE__);
 $arComponentParameters = array(
     "GROUPS" => array(),
     "PARAMETERS" => array(
-
-       /* "ORDER_ID" => array(
-            "PARENT" => "BASE",
-            "NAME" => "Переменная с ID счета",
+        "COUNT_PER_PAGE" => Array(
+            "NAME" => GetMessage("COUNT_PER_PAGE"),
             "TYPE" => "STRING",
-            "DEFAULT" => '={$item}',
+            "MULTIPLE" => "N",
+            "DEFAULT" => "6",
+            "PARENT" => "",
         ),
-        "DISPLAY_LINK" => array(
-            "PARENT" => "BASE",
-            "NAME" => "Выводить ссылку",
+        "SLIDER_MODE" => array(
+            "PARENT" => "",
+            "NAME" => Loc::GetMessage('T88.DISPLAY_MODE'),
             "TYPE" => "CHECKBOX",
-            "DEFAULT" => '',
+            "REFRESH" => "N",
+            "MULTIPLE" => "N",
+            "DEFAULT" => "",
         ),
-        "LINK_TEXT" => array(
-            "PARENT" => "BASE",
-            "NAME" => "Текст на ссылке",
-            "TYPE" => "STRING",
-            "DEFAULT" => '',
-        ),*/
 
         "SEF_MODE" => Array(
             "list" => array(
@@ -33,13 +29,18 @@ $arComponentParameters = array(
             ),
             "new" => array(
                 "NAME" =>  Loc::getMessage("NEW_ELEMENT"),
-                "DEFAULT" => "",
-                "VARIABLES" => array(""),
+                "DEFAULT" => "new/",
+                "VARIABLES" => array("NEW"),
             ),
             "detail" => array(
                 "NAME" => Loc::getMessage("DETAIL_ELEMENT_PAGE"),
                 "DEFAULT" => "#ELEMENT_ID#/",
                 "VARIABLES" => array("ELEMENT_ID"),
+            ),
+            "edit" => array(
+                "NAME" => Loc::getMessage("EDIT_ELEMENT_PAGE"),
+                "DEFAULT" => "edit/#ELEMENT_ID#/",
+                "VARIABLES" => array("EDIT"),
             ),
 
         ),

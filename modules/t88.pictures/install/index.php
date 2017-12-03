@@ -31,7 +31,7 @@ Class t88_pictures extends CModule{
         $this->PARTNER_NAME = Loc::getMessage("T88.PICTURES_PARTNER_NAME"); //
 
         //$p =  __FILE__."./lang" ;
-         //$this->PARTNER_NAME = $p; //
+        //$this->PARTNER_NAME = $p; //
         $this->PARTNER_URI =  Loc::getMessage("T88.PICTURES_PARTNER_URI"); //
     }
 
@@ -47,7 +47,7 @@ Class t88_pictures extends CModule{
     }
 
     function UnInstallDB($arParams = array()){
-        \Bitrix\Main\Application::getConnection()->queryExexute("DROP TABLE IF EXISTS draw_pictures");
+        \Bitrix\Main\Application::getConnection()->queryExecute("DROP TABLE IF EXISTS draw_pictures");
     }
 
     function InstallEvents(){
@@ -57,10 +57,14 @@ Class t88_pictures extends CModule{
     function UnInstallEvents(){
         return true;
     }
+    function UnInstallUploadDir(){
+        // Удаление файлов - картинок модуля
+        \Bitrix\Main\IO\Directory::deleteDirectory($_SERVER['DOCUMENT_ROOT'] . '/upload/t88');
+    }
 
     // здесь содержится установка компонентов, административных скриптов и прочих файлов
     function InstallFiles($arParams = array()){
-        // административные скрипты
+        // Административные скрипты
         if (is_dir($p = $this->getPath().'/admin')){
             if ($dir = opendir($p)){
                 while (false !== $item = readdir($dir)){
@@ -73,22 +77,15 @@ Class t88_pictures extends CModule{
             }
         }
 
-        // компоненты
-        if (is_dir($p = $this->getPath().'/install/components')){
-            if ($dir = opendir($p)){
-                while (false !== $item = readdir($dir)){
-                    if ($item == '..' || $item == '.')
-                        continue;
-                    CopyDirFiles($p.'/'.$item, $_SERVER['DOCUMENT_ROOT'].'/bitrix/components/'.$item, $ReWrite = True, $Recursive = True);
-                }
-                closedir($dir);
-            }
-        }
+        // Компоненты
+        CopyDirFiles($this->GetPath()."/install/components", $_SERVER['DOCUMENT_ROOT']."/bitrix/components", true, true);
+
         return true;
     }
 
     // здесь все установленные в систему файлы модуля удаляются
     function UnInstallFiles(){
+        // Удаление административных скриптов
         if (is_dir($p = $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/'.self::MODULE_ID.'/admin')){
             if ($dir = opendir($p)){
                 while (false !== $item = readdir($dir)){
@@ -99,32 +96,16 @@ Class t88_pictures extends CModule{
                 closedir($dir);
             }
         }
-        if (is_dir($p = $_SERVER['DOCUMENT_ROOT'].'/bitrix/modules/'.self::MODULE_ID.'/install/components')){
-            if ($dir = opendir($p)){
-                while (false !== $item = readdir($dir)){
-                    if ($item == '..' || $item == '.' || !is_dir($p0 = $p.'/'.$item))
-                        continue;
 
-                    $dir0 = opendir($p0);
-                    while (false !== $item0 = readdir($dir0))
-                    {
-                        if ($item0 == '..' || $item0 == '.')
-                            continue;
-                        DeleteDirFilesEx('/bitrix/components/'.$item.'/'.$item0);
-                    }
-                    closedir($dir0);
-                }
-                closedir($dir);
-            }
-        }
+        // Удаление компонентов
+        \Bitrix\Main\IO\Directory::deleteDirectory($_SERVER['DOCUMENT_ROOT'] . '/bitrix/components/t88');
+
         return true;
     }
 
     // точка входа при установке
     function DoInstall(){
         global $APPLICATION;
-
-
 
         if($this->isVersionD7()){
             $this->InstallDB();
@@ -140,31 +121,29 @@ Class t88_pictures extends CModule{
 
     // точка входа при удалении
     function DoUninstall(){
+        global $APPLICATION;
         $context = Application::getInstance()->getContext();
         $request = $context->getRequest();
 
-
-        $context = Appplication::getInstance()->getContext();
-        $request = $context->getRequest();
-
         if($request['step']<2){
-            $APPLICATION->IncludeAdminFile(Loc::getMessage("T88.UNINSTALL_TITLE"),$this->GetPath()."/install/unstep2.php");
+            $APPLICATION->IncludeAdminFile(Loc::getMessage("T88.UNINSTALL_TITLE"),$this->GetPath()."/install/unstep1.php");
         }
         elseif($request['step']==2){
             $this->UnInstallFiles();
             $this->UnInstallEvents();
 
-            if($request['savedata'] != 'N')
+            // Удаляем таблицу и файлы
+            if($request['deldata'] == 'Y'){
                 $this->UnInstallDB();
+                $this->UnInstallUploadDir();
+            }
 
             \Bitrix\Main\ModuleManager::unRegisterModule($this->MODULE_ID);
 
             $APPLICATION->IncludeAdminFile(Loc::getMessage("T88.UNINSTALL_TITLE"), $this->GetPath()."/install/unstep2.php");
         }
 
-
     }
-
 
     function isVersionD7(){
 

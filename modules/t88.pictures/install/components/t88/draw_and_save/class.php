@@ -1,47 +1,27 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-// $arParams
-// $arResult
+
 use \Bitrix\Main;
+use \Bitrix\Main\Localization\Loc as Loc;
 use \Bitrix\Main\Entity;
 use \Bitrix\Main\Type;
-use \Bitrix\Main\Localization\Loc as Loc;
+use \T88\Pictures\OrmTable;
 use \Bitrix\Main\Loader;
-use \T88\Pictures\PicturesTable;
-
+use \Bitrix\Main\Application;
 
 
 class Drow_and_save extends CBitrixComponent
 {
-    public $arDefaultUrlTemplates404 = array(
-        "list" => "",
-        "detail" => "#ELEMENT_ID#/",
-        "new" => "",
-    );
+    public $arUrlTemplates = array();
+    public $componentPage ="";
 
-    public $arDefaultVariableAliases404 = array();
-    public $arDefaultVariableAliases    = array();
-    public $arVariables                 = array();
-    public $arUrlTemplates              = array();
-    public $componentPage               = "";
-    public $arComponentVariables        = array(
-                                            "SECTION_ID",
-                                            "SECTION_CODE",
-                                            "ELEMENT_ID",
-                                            "ELEMENT_CODE",
-                                            );
-    public function getComponentPage(){
-        $this->componentPage = CComponentEngine::ParseComponentPath($this->arParams['SEF_FOLDER'], $this->setUrlTemplates(), $this->arVariables);
+    public function checkModules(){
 
-        if(!$this->componentPage)
-            $this->componentPage = 'list';
-
-        return $this->componentPage;
-    }
-
-    public function test()
-    {
-        return "Hello!";
+        if(!Loader::includeModule("t88.pictures")){
+            ShowError(Loc::getMessage('T88_MODULE_NOT_INSTALL'));
+            die();
+        }
+        return true;
     }
 
     public function getLang(){
@@ -54,42 +34,76 @@ class Drow_and_save extends CBitrixComponent
         return $this->arUrlTemplates;
     }
 
-    public function getParams(){
+    public function getComponentPage(){
 
+        $this->componentPage = CComponentEngine::ParseComponentPath($this->arParams['SEF_FOLDER'], $this->setUrlTemplates(), $this->arVariables);
 
+        if(!$this->componentPage)
+            $this->componentPage = 'list';
 
+        return $this->componentPage;
     }
-
-    public function setVariables(){
-        $this->arVariables = CComponentEngine::InitComponentVariables($this->componentPage, $this->arComponentVariables,$this->arVariables );
-        return $this->arVariables;
-        //print_r(CComponentEngine::InitComponentVariables($this->componentPage, $this->arComponentVariables,$this->arVariables ));
-    }
-
-
+    public $arDefaultUrlTemplates404 = array(
+        "list" => "list",
+        "detail" => "#ELEMENT_ID#/",
+        "new" => "new",
+        "edit" => "edit/#ELEMENT_ID#/",
+    );
 
     public function executeComponent()
     {
-        //print_r($this->getUrlTemplates());
-        print_r($this->getComponentPage());
-        echo "<br>";
+        if($this->checkModules()){
 
-        PicturesTable::add(array(
-            'FILEID' => '123123',
-            'PASSWORD'=> '123312'
-        ));
-        $this->arResult['data']  = PicturesTable::GetList()->fetchAll();
-        //print_r($this->getVariables());
+            $arDefaultUrlTemplates404 = array(  // занчения ЧПУ по уолчанию
+                "list" => "list/",
+                "detail" => "#ELEMENT_ID#/",
+                "new" => "new",
+                "edit" => "/edit/#ELEMENT_ID#/",
+            );
 
+            $arDefaultVariableAliases404 = array();
+            $arDefaultVariableAliases = array();
 
-        if($this->startResultCache())
-        {
-            $this->arResult["MESS"] = $this->test();
-            $this->includeComponentTemplate($this->componentPage);
+            $arComponentVariables = array(
+                "ELEMENT_ID",
+            );
+            if($this->arParams['SEF_MODE'] == "Y"){
+                $arVariables = array();
+                //массив шаблонов URL
+                $arUrlTemplates = CComponentEngine::MakeComponentUrlTemplates($arDefaultUrlTemplates404, $this->arParams['SEF_URL_TEMPLATES']);
+
+                $arVariableAliases = CComponentEngine::MakeComponentVariableAliases($arDefaultVariableAliases404, $this->arParams['VARIABLE_ALIASES']);
+
+                $componentPage = CComponentEngine::ParseComponentPath(
+                    $this->arParams['SEF_FOLDER'],
+                    $arUrlTemplates,
+                    $arVariables
+                );
+                if(!$componentPage)
+                    $componentPage = 'list';
+
+                CComponentEngine::InitComponentVariables(
+                    $componentPage,
+                    $arComponentVariables,
+                    $arVariableAliases,
+                    $arVariables
+                );
+
+                $this->arResult = array(
+                    "FOLDER" => $this->arParams['SEF_FOLDER'],
+                    "URL_TEMPLATES" => $arUrlTemplates,
+                    "VARIABLES" => $arVariables,
+                    "ALIASES" => $arVariableAliases,
+                    "COUNT_PER_PAGE"=> $this->arParams['COUNT_PER_PAGE'],
+                    "SLIDER_MODE" => $this->arParams['SLIDER_MODE'],
+                );
+
+                if($this->startResultCache())
+                {
+                    $this->includeComponentTemplate($componentPage);
+                }
+                return $this->arResult;
+            }
         }
-        return $this->arResult;
     }
-
-
-
 }?>

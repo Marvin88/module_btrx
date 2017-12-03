@@ -15,7 +15,9 @@ Loc::loadMessages(__FILE__);
     <input type="hidden" name="uninstall" value="Y">
     <input type="hidden" name="step" value="2">
     <?= CAdminMessage::ShowMessage(Loc::getMessage("MOD_UNINST_WARN"))?>
-    <p><?echo Loc::getMessage("MOD_UNINST_SAVE")?></p>
-    <p><input type="checkbox" name="savedata" id="savedata" value="Y" checked><label for="savedata" <?echo Loc::getMessage("MOD_UNINST_SAVE_TABLES")?></lanel></p>
+    <p><?echo Loc::getMessage("MOD_UNINST_DEL_TABLES")?></p>
+    <p><input type="checkbox" name="deldata" id="deldata" value="Y" checked>
+        <label for="deldata" > <?echo Loc::getMessage("MOD_UNINST_DEL_YES")?></lanel>
+    </p>
     <input type="submit" name="" value="<?echo Loc::getMessage("MOD_UNINST_DEL")?>">
 </form>
